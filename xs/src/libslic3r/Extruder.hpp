@@ -47,6 +47,9 @@ class Extruder
     double retract_length_toolchange() const;
     double retract_restart_extra_toolchange() const;
     
+    bool use_angled_extruder() const;
+    double angled_extruder_width() const;
+    double angled_extruder_height() const;
     private:
     GCodeConfig *config;
 };

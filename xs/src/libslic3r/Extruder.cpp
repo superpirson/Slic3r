@@ -166,4 +166,18 @@ Extruder::retract_restart_extra_toolchange() const
     return this->config->retract_restart_extra_toolchange.get_at(this->id);
 }
 
+
+bool Extruder::use_angled_extruder() const
+{
+    return this->config->use_angled_extruder.get_at(this->id);
+}
+
+double Extruder::angled_extruder_width() const
+{
+    return this->config->angled_extruder_width.get_at(this->id);
+}
+double Extruder::angled_extruder_height() const
+{
+    return this->config->angled_extruder_height.get_at(this->id);
+}
 }
