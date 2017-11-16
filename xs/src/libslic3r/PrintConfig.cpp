@@ -1151,7 +1151,44 @@ PrintConfigDef::PrintConfigDef()
         opt->values.push_back(0);
         def->default_value = opt;
     }
+   
+   //support for angled nozzles
+     def = this->add("use_angled_extruder", coBools);
+    def->label = "Use angled extruder";
+    def->tooltip = "...";
+    def->cli = "use_angled_extruder!";
+    {
+        ConfigOptionBools* opt = new ConfigOptionBools();
+        opt->values.push_back(false);
+        def->default_value = opt;
+    }
 
+   
+   
+    def = this->add("angled_extruder_width", coFloats);
+    def->label = "Angled extruder width";
+    def->tooltip = "...";
+    def->sidetext = "mm";
+    def->cli = "angled_extruder_width=f@";
+    {
+        ConfigOptionFloats* opt = new ConfigOptionFloats();
+        opt->values.push_back(0);
+        def->default_value = opt;
+    }
+    def = this->add("angled_extruder_height", coFloats);
+    def->label = "Angled extruder height";
+    def->tooltip = "...";
+    def->sidetext = "mm";
+    def->cli = "angled_extruder_height=f@";
+    {
+        ConfigOptionFloats* opt = new ConfigOptionFloats();
+        opt->values.push_back(0);
+        def->default_value = opt;
+    }
+   //END support for angled nozzles
+	
+	
+	
     def = this->add("retract_speed", coFloats);
     def->label = "Speed";
     def->category = "Retraction";

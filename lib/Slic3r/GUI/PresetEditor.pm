@@ -1457,8 +1457,8 @@ sub _extruders_count_changed {
     $self->_update;
 }
 
-sub _extruder_options { qw(nozzle_diameter min_layer_height max_layer_height extruder_offset retract_length retract_lift retract_lift_above retract_lift_below retract_speed retract_restart_extra retract_before_travel wipe
-    retract_layer_change retract_length_toolchange retract_restart_extra_toolchange) }
+sub _extruder_options { qw(nozzle_diameter min_layer_height max_layer_height extruder_offset retract_length retract_lift retract_lift_above retract_lift_below retract_speed retract_restart_extra retract_before_travel wipe retract_layer_change retract_length_toolchange retract_restart_extra_toolchange use_angled_extruder angled_extruder_width angled_extruder_height) }
+# use_angled_extruder angled_extruder_width angled_extruder_height
 
 sub _build_extruder_pages {
     my $self = shift;
@@ -1516,6 +1516,11 @@ sub _build_extruder_pages {
             my $optgroup = $page->new_optgroup('Retraction when tool is disabled (advanced settings for multi-extruder setups)');
             $optgroup->append_single_option_line($_, $extruder_idx)
                 for qw(retract_length_toolchange retract_restart_extra_toolchange);
+        }
+	{
+            my $optgroup = $page->new_optgroup('Angled Extruder');
+    	    $optgroup->append_single_option_line($_, $extruder_idx)
+		for qw(angled_extruder_width angled_extruder_height);
         }
     }
     

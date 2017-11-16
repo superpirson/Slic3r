@@ -340,6 +340,9 @@ class GCodeConfig : public virtual StaticPrintConfig
     ConfigOptionFloats              retract_lift_below;
     ConfigOptionFloats              retract_restart_extra;
     ConfigOptionFloats              retract_restart_extra_toolchange;
+    ConfigOptionBool	       	    use_angled_extrude;
+    ConfigOptionFloats	       	    angled_extruder_width;
+    ConfigOptionFloats	       	    angled_extruder_height;
     ConfigOptionFloats              retract_speed;
     ConfigOptionString              start_gcode;
     ConfigOptionStrings             start_filament_gcode;
@@ -381,6 +384,9 @@ class GCodeConfig : public virtual StaticPrintConfig
         OPT_PTR(retract_lift_below);
         OPT_PTR(retract_restart_extra);
         OPT_PTR(retract_restart_extra_toolchange);
+	OPT_PTR(use_angled_extrude);
+	OPT_PTR(angled_extruder_width);
+	OPT_PTR(angled_extruder_height);
         OPT_PTR(retract_speed);
         OPT_PTR(start_gcode);
         OPT_PTR(start_filament_gcode);

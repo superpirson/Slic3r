@@ -332,6 +332,7 @@ sub _line_intersection {
 
   unless ( defined $dyx10 or defined $dyx32 ) {
     return "parallel vertical";
+	
   }
   elsif ( $dy10z and not $dy32z ) { # First line horizontal.
     $y = $y0;
