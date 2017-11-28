@@ -26,6 +26,15 @@ PerimeterGenerator::process()
     // solid infill
     coord_t ispacing            = this->solid_infill_flow.scaled_spacing();
     
+    bool use_angled_extruder = false;
+    float angled_extruder_height;
+    float angled_extruder_width;
+    if (print_config.use_angled_extruder.get_at(config.perimeter_extruder)){
+    	use_angled_extruder=true;
+    	angled_extruder_height=print_config.angled_extruder_height.get_at(config.perimeter_extruder);
+    	angled_extruder_width=print_config.angled_extruder_width.get_at(config.perimeter_extruder);
+    	fprintf(stderr,"We just decided to use angled extruder that is %dx%d mm.\n",angled_extruder_height,angled_extruder_width );
+    }
     // Calculate the minimum required spacing between two adjacent traces.
     // This should be equal to the nominal flow spacing but we experiment
     // with some tolerance in order to avoid triggering medial axis when
