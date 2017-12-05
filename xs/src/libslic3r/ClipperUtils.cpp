@@ -124,6 +124,45 @@ _offset(const Polygons &polygons, const float delta,
 }
 
 ClipperLib::Paths
+_offset_d(const Polygons &polygons, const float delta, const float angled_extruder_height, const float angled_extruder_width,
+    double scale, ClipperLib::JoinType joinType, double miterLimit)
+{
+    // read input
+    ClipperLib::Paths input = Slic3rMultiPoints_to_ClipperPaths(polygons);
+    
+    // scale input
+    scaleClipperPolygons(input, scale);
+    
+    // perform offset
+    ClipperLib::ClipperOffset co;
+    if (joinType == jtRound) {
+        co.ArcTolerance = miterLimit;
+    } else {
+        co.MiterLimit = miterLimit;
+    }
+    co.AddPaths(input, joinType, ClipperLib::etClosedPolygon);
+    ClipperLib::Paths retval;
+    co.Execute_d(retval, (delta*scale), angled_extruder_width, angled_extruder_height);
+    
+    // unscale output
+    scaleClipperPolygons(retval, 1/scale);
+    return retval;
+}
+
+
+Polygons
+offset_d(const Polygons &polygons, const float delta, const float angled_extruder_height, const float angled_extruder_width,
+    double scale, ClipperLib::JoinType joinType, double miterLimit)
+{
+    // perform offset
+    ClipperLib::Paths output = _offset_d(polygons, delta,angled_extruder_height,angled_extruder_width, scale, joinType, miterLimit);
+    
+    // convert into Polygons
+    return ClipperPaths_to_Slic3rMultiPoints<Polygons>(output);
+}
+
+
+ClipperLib::Paths
 _offset(const Polylines &polylines, const float delta,
     double scale, ClipperLib::JoinType joinType, double miterLimit)
 {

@@ -1,5 +1,6 @@
 #include "GCodeWriter.hpp"
 #include "utils.hpp"
+#include <math.h>
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -415,9 +416,12 @@ GCodeWriter::will_move_z(double z) const
 std::string
 GCodeWriter::extrude_to_xy(const Pointf &point, double dE, const std::string &comment)
 {
+	double old_x=this->_pos.x;
+	double old_y=this->_pos.y;
     this->_pos.x = point.x;
     this->_pos.y = point.y;
-    this->_extruder->extrude(dE);
+    double root = sqrt(pow(point.x-old_x,2)+pow(point.y-old_y,2));
+    this->_extruder->extrude(dE,point.x-old_x/root, point.y-old_y/root );
     
     std::ostringstream gcode;
     gcode << "G1 X" << XYZF_NUM(point.x)
@@ -431,9 +435,12 @@ GCodeWriter::extrude_to_xy(const Pointf &point, double dE, const std::string &co
 std::string
 GCodeWriter::extrude_to_xyz(const Pointf3 &point, double dE, const std::string &comment)
 {
+	double old_x=this->_pos.x;
+	double old_y=this->_pos.y;
     this->_pos = point;
+    double root = sqrt(pow(point.x-old_x,2)+pow(point.y-old_y,2));
     this->_lifted = 0;
-    this->_extruder->extrude(dE);
+    this->_extruder->extrude(dE,point.x-old_x/root, point.y-old_y/root  );
     
     std::ostringstream gcode;
     gcode << "G1 X" << XYZF_NUM(point.x)

@@ -1,5 +1,5 @@
 #include "Extruder.hpp"
-
+#include <math.h>
 namespace Slic3r {
 
 Extruder::Extruder(unsigned int id, GCodeConfig *config)
@@ -15,6 +15,15 @@ Extruder::Extruder(unsigned int id, GCodeConfig *config)
         this->e_per_mm3 = this->extrusion_multiplier()
             * (4 / ((this->filament_diameter() * this->filament_diameter()) * PI));
     }
+    
+    if (this->use_angled_extruder()){
+    	this->angled_e=true;
+    	//normalize the width and hight
+    	double root =sqrt(pow(angled_extruder_height(),2.0)+pow(angled_extruder_width(),2.0));
+    	this->extruder_len=this->angled_extruder_height()/root;
+    	this->extruder_wid=this->angled_extruder_width()/root;
+    	
+    }
     this->retract_speed_mm_min = this->retract_speed() * 60;
 }
 
@@ -28,14 +37,18 @@ Extruder::reset()
 }
 
 double
-Extruder::extrude(double dE)
+Extruder::extrude(double dE, double dx, double dy)
 {
+
     // in case of relative E distances we always reset to 0 before any output
     if (this->config->use_relative_e_distances)
         this->E = 0;
 
     this->E += dE;
     this->absolute_E += dE;
+    if (this->angled_e){
+    	return dE*(dx*extruder_len+dy*extruder_wid);
+    }	
     return dE;
 }
 
@@ -70,7 +83,7 @@ double
 Extruder::unretract()
 {
     double dE = this->retracted + this->restart_extra;
-    this->extrude(dE);
+    this->extrude(dE,.707106,.707106);
     this->retracted = 0;
     this->restart_extra = 0;
     return dE;

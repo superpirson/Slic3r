@@ -61,10 +61,12 @@ Fill::fill_surface(const Surface &surface)
     
     // Create the infills for each of the regions.
     Polylines polylines_out;
+    Fill::direction_t infill_dir= this->_infill_direction(surface);
+    
     for (size_t i = 0; i < expp.size(); ++i)
         this->_fill_surface_single(
             surface.thickness_layers,
-            this->_infill_direction(surface),
+            infill_dir,
             expp[i],
             &polylines_out
         );

@@ -19,11 +19,15 @@ class Extruder
     double e_per_mm3;
     double retract_speed_mm_min;
     
+    bool angled_e;
+    double extruder_len;
+    double extruder_wid;
     Extruder(unsigned int id, GCodeConfig *config);
     virtual ~Extruder() {}
     void reset();
     /// Calculate the amount extruded for relative or absolute moves.
-    double extrude(double dE);
+    double extrude(double dE, double dx, double dy);
+
     double retract(double length, double restart_extra);
     double unretract();
     double e_per_mm(double mm3_per_mm) const;

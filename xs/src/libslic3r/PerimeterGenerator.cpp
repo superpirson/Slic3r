@@ -3,7 +3,8 @@
 #include "ExtrusionEntityCollection.hpp"
 #include <cmath>
 #include <cassert>
-
+#include <unistd.h>
+#include <fcntl.h>
 namespace Slic3r {
 
 void
@@ -25,16 +26,18 @@ PerimeterGenerator::process()
     
     // solid infill
     coord_t ispacing            = this->solid_infill_flow.scaled_spacing();
-    
+  
     bool use_angled_extruder = false;
     float angled_extruder_height;
     float angled_extruder_width;
-    if (print_config.use_angled_extruder.get_at(config.perimeter_extruder)){
+    if (print_config->use_angled_extruder.get_at(config->perimeter_extruder-1)){
     	use_angled_extruder=true;
-    	angled_extruder_height=print_config.angled_extruder_height.get_at(config.perimeter_extruder);
-    	angled_extruder_width=print_config.angled_extruder_width.get_at(config.perimeter_extruder);
-    	fprintf(stderr,"We just decided to use angled extruder that is %dx%d mm.\n",angled_extruder_height,angled_extruder_width );
+    	angled_extruder_height=print_config->angled_extruder_height.get_at(config->perimeter_extruder-1);
+    	angled_extruder_width=print_config->angled_extruder_width.get_at(config->perimeter_extruder-1);
+    	//fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
+   		
     }
+
     // Calculate the minimum required spacing between two adjacent traces.
     // This should be equal to the nominal flow spacing but we experiment
     // with some tolerance in order to avoid triggering medial axis when
@@ -80,18 +83,21 @@ PerimeterGenerator::process()
                 if (i == 0) {
                     // the minimum thickness of a single loop is:
                     // ext_width/2 + ext_spacing/2 + spacing/2 + width/2
-                    if (this->config->thin_walls) {
+                    if (this->config->thin_walls && ! use_angled_extruder) {
                         offsets = offset2(
                             last,
                             -(ext_pwidth/2 + ext_min_spacing/2 - 1),
                             +(ext_min_spacing/2 - 1)
                         );
-                    } else {
+                    } else if(!use_angled_extruder){
+                    	
                         offsets = offset(last, -ext_pwidth/2);
+                    }else{
+                   	offsets = offset_d(last, -ext_pwidth/2,angled_extruder_height,angled_extruder_width);
                     }
                     
                     // look for thin walls
-                    if (this->config->thin_walls) {
+                    if (this->config->thin_walls && ! use_angled_extruder) {
                         Polygons diffpp = diff(
                             last,
                             offset(offsets, +ext_pwidth/2),
@@ -128,7 +134,7 @@ PerimeterGenerator::process()
                     // from the line width of the infill?
                     coord_t distance = (i == 1) ? ext_pspacing2 : pspacing;
                     
-                    if (this->config->thin_walls) {
+                    if (this->config->thin_walls && ! use_angled_extruder) {
                         // This path will ensure, that the perimeters do not overfill, as in 
                         // prusa3d/Slic3r GH #32, but with the cost of rounding the perimeters
                         // excessively, creating gaps, which then need to be filled in by the not very 
@@ -140,16 +146,21 @@ PerimeterGenerator::process()
                             -(distance + min_spacing/2 - 1),
                             +(min_spacing/2 - 1)
                         );
-                    } else {
+                    } else if (!use_angled_extruder){
                         // If "detect thin walls" is not enabled, this paths will be entered, which 
                         // leads to overflows, as in prusa3d/Slic3r GH #32
+                        
                         offsets = offset(
                             last,
                             -distance
                         );
+                        }else{
+                        
+                        offsets = offset_d(last,-distance,angled_extruder_height,angled_extruder_width);
                     }
                     
-                    // look for gaps
+                    // look for gaps 
+                    //TODO
                     if (this->config->fill_gaps && this->config->fill_density.value > 0) {
                         // not using safety offset here would "detect" very narrow gaps
                         // (but still long enough to escape the area threshold) that gap fill
@@ -166,9 +177,12 @@ PerimeterGenerator::process()
                 if (i > loop_number) break; // we were only looking for gaps this time
                 
                 last = offsets;
+
                 for (Polygons::const_iterator polygon = offsets.begin(); polygon != offsets.end(); ++polygon) {
                     PerimeterGeneratorLoop loop(*polygon, i);
+                    
                     loop.is_contour = polygon->is_counter_clockwise();
+
                     if (loop.is_contour) {
                         contours[i].push_back(loop);
                     } else {
@@ -298,6 +312,8 @@ PerimeterGenerator::process()
         // we offset by half the perimeter spacing (to get to the actual infill boundary)
         // and then we offset back and forth by half the infill spacing to only consider the
         // non-collapsing regions
+        
+        //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         coord_t inset = 0;
         if (loop_number == 0) {
             // one loop
@@ -327,6 +343,7 @@ PerimeterGenerator::process()
             this->fill_surfaces->append(expp, stInternal);  // use a bogus surface type
         }
     }
+    
 }
 
 ExtrusionEntityCollection

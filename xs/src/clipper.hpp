@@ -365,6 +365,7 @@ public:
   void AddPath(const Path& path, JoinType joinType, EndType endType);
   void AddPaths(const Paths& paths, JoinType joinType, EndType endType);
   void Execute(Paths& solution, double delta);
+  void Execute_d(Paths& solution, double delta, const float shift_x, const float shift_y);
   void Execute(PolyTree& solution, double delta);
   void Clear();
   double MiterLimit;
@@ -381,7 +382,9 @@ private:
 
   void FixOrientations();
   void DoOffset(double delta);
+  void DoOffset_d(double delta, const float shift_x, const float shift_y);
   void OffsetPoint(int j, int& k, JoinType jointype);
+  void OffsetPoint_d(int j, int& k, JoinType jointype, const float shift_x, const float shift_y);
   void DoSquare(int j, int k);
   void DoMiter(int j, int k, double r);
   void DoRound(int j, int k);

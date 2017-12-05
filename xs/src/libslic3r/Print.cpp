@@ -492,7 +492,6 @@ Print::add_model_object(ModelObject* model_object, int idx)
             pp.set("input_filename", input_basename);
             const std::string input_basename_base = input_basename.substr(0, input_basename.find_last_of("."));
             pp.set("input_filename_base", input_basename_base);
-        }
     }
 }
 

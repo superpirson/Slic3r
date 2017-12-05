@@ -46,7 +46,14 @@ ClipperLib::Paths _offset(const Slic3r::Polygons &polygons, const float delta,
 Slic3r::Polygons offset(const Slic3r::Polygons &polygons, const float delta,
     double scale = CLIPPER_OFFSET_SCALE, ClipperLib::JoinType joinType = ClipperLib::jtMiter, 
     double miterLimit = 3);
-
+    
+ClipperLib::Paths _offset_d(const Slic3r::Polygons &polygons, const float delta, const float angled_extruder_height, const float angled_extruder_width,
+    double scale = CLIPPER_OFFSET_SCALE, ClipperLib::JoinType joinType = ClipperLib::jtMiter, 
+    double miterLimit = 3);
+Slic3r::Polygons offset_d(const Slic3r::Polygons &polygons, const float delta,const float angled_extruder_height, const float angled_extruder_width,
+    double scale = CLIPPER_OFFSET_SCALE, ClipperLib::JoinType joinType = ClipperLib::jtMiter, 
+    double miterLimit = 3);
+    
 // offset Polylines
 ClipperLib::Paths _offset(const Slic3r::Polylines &polylines, const float delta,
     double scale = CLIPPER_OFFSET_SCALE, ClipperLib::JoinType joinType = ClipperLib::jtSquare, 

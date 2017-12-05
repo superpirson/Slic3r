@@ -10,7 +10,7 @@
         %code%{ RETVAL = new Extruder (id, dynamic_cast<GCodeConfig*>(config)); %};
     ~Extruder();
     void reset();
-    double extrude(double dE);
+    double extrude(double dE, double dx, double dy);
     double retract(double length, double restart_extra);
     double unretract();
     double e_per_mm(double mm3_per_mm);
