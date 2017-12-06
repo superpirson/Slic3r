@@ -43,12 +43,13 @@ Extruder::extrude(double dE, double dx, double dy)
     // in case of relative E distances we always reset to 0 before any output
     if (this->config->use_relative_e_distances)
         this->E = 0;
-
+    if (this->angled_e){
+    	double root = sqrt(pow(dx,2)+pow(dy,2));
+    	dE= dE*((dx/root)*extruder_len+(dy/root)*extruder_wid);
+    }	
     this->E += dE;
     this->absolute_E += dE;
-    if (this->angled_e){
-    	return dE*(dx*extruder_len+dy*extruder_wid);
-    }	
+    
     return dE;
 }
 

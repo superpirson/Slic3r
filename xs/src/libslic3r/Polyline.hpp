@@ -32,6 +32,13 @@ class Polyline : public MultiPoint {
     void split_at(const Point &point, Polyline* p1, Polyline* p2) const;
     bool is_straight() const;
     std::string wkt() const;
+    Point direction_vector() const {
+    	Point newpoint = this->last_point() - this->first_point();
+    	double root =sqrt(pow(newpoint.x,2)+pow(newpoint.y,2));
+   	newpoint.x=newpoint.x/root;
+    	newpoint.y=newpoint.y/root;
+     	return newpoint;
+    };
 };
 
 class ThickPolyline : public Polyline {

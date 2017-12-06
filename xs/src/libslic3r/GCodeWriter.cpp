@@ -438,9 +438,9 @@ GCodeWriter::extrude_to_xyz(const Pointf3 &point, double dE, const std::string &
 	double old_x=this->_pos.x;
 	double old_y=this->_pos.y;
     this->_pos = point;
-    double root = sqrt(pow(point.x-old_x,2)+pow(point.y-old_y,2));
+
     this->_lifted = 0;
-    this->_extruder->extrude(dE,point.x-old_x/root, point.y-old_y/root  );
+    this->_extruder->extrude(dE,point.x-old_x,point.y-old_y );
     
     std::ostringstream gcode;
     gcode << "G1 X" << XYZF_NUM(point.x)
