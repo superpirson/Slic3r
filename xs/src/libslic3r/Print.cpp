@@ -808,12 +808,12 @@ Print::_make_brim()
 {
 
     bool use_angled_extruder = false;
-    float angled_extruder_height;
-    float angled_extruder_width;
-    if (config->use_angled_extruder.get_at(config->perimeter_extruder-1)){
+    float extruder_len;
+    float extruder_wid;
+    if (config.use_angled_extruder.get_at(this->objects.front()->config.support_material_extruder-1)){
     	use_angled_extruder=true;
-    	angled_extruder_height=config->angled_extruder_height.get_at(config->perimeter_extruder-1);
-    	angled_extruder_width=config->angled_extruder_width.get_at(config->perimeter_extruder-1);
+    	extruder_len=config.angled_extruder_height.get_at(this->objects.front()->config.support_material_extruder-1);
+    	extruder_wid=config.angled_extruder_width.get_at(this->objects.front()->config.support_material_extruder-1);
     	//fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
    		
     }
@@ -882,12 +882,13 @@ Print::_make_brim()
         Polygons chained = union_pt_chained(loops);
         for (Polygons::const_reverse_iterator p = chained.rbegin(); p != chained.rend(); ++p) {
 	  Polyline polyline =  p->split_at_first_point();
-	  if (print_config->use_angled_extruder.get_at(config->perimeter_extruder-1){
+	  double width_special= flow.width;
+	  if (use_angled_extruder){
 	    //if we are using an angled extruder, set width to new val
-		double root = sqrt(pow(dx,2)+pow(dy,2));
-    		width= width*((dx/root)*extruder_len+(dy/root)*extruder_wid);
+		Point dir = Polyline(*p).direction_vector();
+    		width_special= flow.width*(dir.x*extruder_len+dir.y*extruder_wid);
    	   } 
-            ExtrusionPath path(erSkirt, mm3_per_mm, flow.width, flow.height);
+            ExtrusionPath path(erSkirt, mm3_per_mm, width_special, flow.height);
             path.polyline = polyline;
             this->brim.append(ExtrusionLoop(path));
         }
