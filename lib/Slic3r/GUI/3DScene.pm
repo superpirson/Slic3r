@@ -1539,7 +1539,9 @@ sub _extrusionentity_to_verts {
         $polyline->remove_duplicate_points;
         $polyline->translate(@$copy);
         $lines = $polyline->lines;
-        $widths = [ map $entity->width, 0..$#$lines ];
+        my $idx=.2;
+        $widths = [ map {$idx = $idx +.001, $entity->width * $idx} 0..$#$lines ];
+        #$widths = [ map $entity->width, 0..$#$lines ];
         $heights = [ map $entity->height, 0..$#$lines ];
         $closed = 0;
     } else {
@@ -1553,7 +1555,9 @@ sub _extrusionentity_to_verts {
             $polyline->translate(@$copy);
             my $path_lines = $polyline->lines;
             push @$lines, @$path_lines;
-            push @$widths, map $path->width, 0..$#$path_lines;
+            my $idx = .2;
+            push @$widths, map { $idx = $idx +.001, $path->width * $idx} 0..$#$path_lines;
+            #push @$widths, map $path->width, 0..$#$path_lines;
             push @$heights, map $path->height, 0..$#$path_lines;
         }
     }

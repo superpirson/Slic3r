@@ -31,6 +31,25 @@ LayerRegion::make_fill()
 {
     this->fills.clear();
     
+    
+    
+    
+ /*   
+    bool use_angled_extruder = false;
+    float angled_extruder_height;
+    float angled_extruder_width;
+    if (this->region()->config.use_angled_extruder.get_at(config->perimeter_extruder-1)){
+    	use_angled_extruder=true;
+    	angled_extruder_height=this->region()->config.angled_extruder_height.get_at(config->infill_extruder-1);
+    	angled_extruder_width=this->region()->config.angled_extruder_width.get_at(config->infill_extruder-1);
+    	//fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
+   		
+    }
+    
+    //*/
+    
+    
+    
     const double fill_density          = this->region()->config.fill_density;
     const Flow   infill_flow           = this->flow(frInfill);
     const Flow   solid_infill_flow     = this->flow(frSolidInfill);

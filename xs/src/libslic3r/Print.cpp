@@ -494,6 +494,7 @@ Print::add_model_object(ModelObject* model_object, int idx)
             pp.set("input_filename_base", input_basename_base);
     }
 }
+}
 
 bool
 Print::apply_config(DynamicPrintConfig config)
