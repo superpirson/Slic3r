@@ -31,8 +31,8 @@ PerimeterGenerator::process()
     	use_angled_extruder=true;
     	angled_extruder_height=print_config->angled_extruder_height.get_at(config->perimeter_extruder-1);
     	angled_extruder_width=print_config->angled_extruder_width.get_at(config->perimeter_extruder-1);
-    	//fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
-   		
+    	fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
+   		//@#QSSS
     }
 
     // Calculate the minimum required spacing between two adjacent traces.
@@ -409,7 +409,7 @@ PerimeterGenerator::_traverse_loops(const PerimeterGeneratorLoops &loops,
             path.width      = is_external ? this->ext_perimeter_flow.width  : this->perimeter_flow.width;
             
             Point dir = path.polyline.direction_vector();
-            path.width *=(angled_extruder_height*dir.y+angled_extruder_width*dir.x);
+            //path.width *=(angled_extruder_height*dir.y+angled_extruder_width*dir.x);
             
             path.height     = this->layer_height;
             paths.push_back(path);
