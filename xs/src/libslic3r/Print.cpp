@@ -881,15 +881,19 @@ Print::_make_brim()
     {
         Polygons chained = union_pt_chained(loops);
         for (Polygons::const_reverse_iterator p = chained.rbegin(); p != chained.rend(); ++p) {
-	  Polyline polyline =  p->split_at_first_point();
-	  double width_special= flow.width;
+	  //Polyline polyline =  p->split_at_first_point();
+	/*  double width_special= flow.width;
 	  if (use_angled_extruder){
 	    //if we are using an angled extruder, set width to new val
 		Point dir = Polyline(*p).direction_vector();
-    		width_special= flow.width*(dir.x*extruder_len+dir.y*extruder_wid);
+
+    		width_special= width_special*(dir.x*extruder_len+dir.y*extruder_wid);
+    	
+    		printf("Line starting at %ld , %ld to %ld , %ld Producing a dir vector with %ld , %ld to get a scaled width %f\n", Polyline(*p).first_point().x,Polyline(*p).first_point().y,Polyline(*p).last_point().x,Polyline(*p).last_point().y, dir.x,dir.y,width_special);
    	   } 
-            ExtrusionPath path(erSkirt, mm3_per_mm, width_special, flow.height);
-            path.polyline = polyline;
+   	   //*/
+            ExtrusionPath path(erSkirt, mm3_per_mm, flow.width, flow.height);
+            path.polyline = p->split_at_first_point();
             this->brim.append(ExtrusionLoop(path));
         }
     }
