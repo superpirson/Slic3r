@@ -67,16 +67,19 @@ public:
     float width;
     /// Height of the extrusion.
     float height;
-    double nozz_width;
-    double nozz_hight;
     
     ExtrusionPath(ExtrusionRole role) : role(role), mm3_per_mm(-1), width(-1), height(-1) {};
     ExtrusionPath(ExtrusionRole role, double mm3_per_mm, float width, float height) : role(role), mm3_per_mm(mm3_per_mm), width(width), height(height) {};
     
-    ExtrusionPath(ExtrusionRole role, double mm3_per_mm, float width, float height, double nozz_width,double nozz_hight) : role(role), mm3_per_mm(mm3_per_mm), width(width), height(height), nozz_width(nozz_width),nozz_hight(nozz_hight) {
+    
+    //*
+    double nozz_width;
+    double nozz_hight;
+    
+    ExtrusionPath(ExtrusionRole role, double mm3_per_mm, float width, float height, double nozz_width,double nozz_hight) : role(role), mm3_per_mm(mm3_per_mm), width(width), height(height), nozz_width(nozz_width),nozz_hight(nozz_hight) {};
+    //*/
     
     
-    };
     
 //    ExtrusionPath(ExtrusionRole role, const Flow &flow) : role(role), mm3_per_mm(flow.mm3_per_mm()), width(flow.width), height(flow.height) {};
     ExtrusionPath* clone() const { return new ExtrusionPath (*this); }
