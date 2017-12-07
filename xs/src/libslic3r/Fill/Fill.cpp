@@ -65,7 +65,9 @@ Fill::fill_surface(const Surface &surface, double nozz_width, double nozz_hight)
     Polylines polylines_out;
     Fill::direction_t infill_dir= this->_infill_direction(surface);
     double  root =sqrt(pow(std::get<1>(infill_dir).x,2)+pow(std::get<1>(infill_dir).y,2));
-    this->density = this->density*((std::get<1>(infill_dir).x*nozz_width)/root+(std::get<1>(infill_dir).y*nozz_hight)/root);
+    double  nozz_root =sqrt(pow(nozz_width,2)+pow(nozz_hight,2));
+    this->density = this->density*((std::get<1>(infill_dir).x/root*nozz_width/nozz_root)+(std::get<1>(infill_dir).y/root*nozz_hight/nozz_root));
+    
     for (size_t i = 0; i < expp.size(); ++i)
         this->_fill_surface_single(
             surface.thickness_layers,

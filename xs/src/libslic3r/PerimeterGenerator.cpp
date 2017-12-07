@@ -26,13 +26,16 @@ PerimeterGenerator::process()
     
     // solid infill
     coord_t ispacing            = this->solid_infill_flow.scaled_spacing();
-
+  
+    bool use_angled_extruder = false;
+    float angled_extruder_height;
+    float angled_extruder_width;
     if (print_config->use_angled_extruder.get_at(config->perimeter_extruder-1)){
     	use_angled_extruder=true;
     	angled_extruder_height=print_config->angled_extruder_height.get_at(config->perimeter_extruder-1);
     	angled_extruder_width=print_config->angled_extruder_width.get_at(config->perimeter_extruder-1);
-    	fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
-   		//@#QSSS
+    	//fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
+
     }
 
     // Calculate the minimum required spacing between two adjacent traces.
@@ -347,6 +350,16 @@ ExtrusionEntityCollection
 PerimeterGenerator::_traverse_loops(const PerimeterGeneratorLoops &loops,
     ThickPolylines &thin_walls) const
 {
+	    bool use_angled_extruder = false;
+    float angled_extruder_height;
+    float angled_extruder_width;
+    if (print_config->use_angled_extruder.get_at(config->perimeter_extruder-1)){
+    	use_angled_extruder=true;
+    	angled_extruder_height=print_config->angled_extruder_height.get_at(config->perimeter_extruder-1);
+    	angled_extruder_width=print_config->angled_extruder_width.get_at(config->perimeter_extruder-1);
+    	//fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
+
+    }
     // loops is an arrayref of ::Loop objects
     // turn each one into an ExtrusionLoop object
     ExtrusionEntityCollection coll;
@@ -465,6 +478,18 @@ PerimeterGenerator::_traverse_loops(const PerimeterGeneratorLoops &loops,
 ExtrusionEntityCollection
 PerimeterGenerator::_variable_width(const ThickPolylines &polylines, ExtrusionRole role, Flow flow) const
 {
+    
+        bool use_angled_extruder = false;
+    float angled_extruder_height;
+    float angled_extruder_width;
+    if (print_config->use_angled_extruder.get_at(config->perimeter_extruder-1)){
+    	use_angled_extruder=true;
+    	angled_extruder_height=print_config->angled_extruder_height.get_at(config->perimeter_extruder-1);
+    	angled_extruder_width=print_config->angled_extruder_width.get_at(config->perimeter_extruder-1);
+    //	fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
+
+    }
+    
     // this value determines granularity of adaptive width, as G-code does not allow
     // variable extrusion within a single move; this value shall only affect the amount
     // of segments, and any pruning shall be performed before we apply this tolerance

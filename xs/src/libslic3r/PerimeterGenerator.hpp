@@ -37,13 +37,6 @@ typedef std::vector<PerimeterGeneratorLoop> PerimeterGeneratorLoops;
 
 class PerimeterGenerator {
 public:
-  
-    bool use_angled_extruder = false;
-    float angled_extruder_height;
-    float angled_extruder_width;
-    
-
-
 
 
     // Inputs:
