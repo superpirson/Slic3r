@@ -169,6 +169,13 @@ typedef std::vector<PrintRegion*> PrintRegionPtrs;
 class Print
 {
     public:
+    
+    bool use_angled_extruder = false;
+    double extruder_len;
+    double extruder_wid;
+    
+    
+    
     PrintConfig config;
     PrintObjectConfig default_object_config;
     PrintRegionConfig default_region_config;

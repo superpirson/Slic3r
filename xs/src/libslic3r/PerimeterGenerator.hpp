@@ -37,10 +37,21 @@ typedef std::vector<PerimeterGeneratorLoop> PerimeterGeneratorLoops;
 
 class PerimeterGenerator {
 public:
+  
+    bool use_angled_extruder = false;
+    float angled_extruder_height;
+    float angled_extruder_width;
+    
+
+
+
+
     // Inputs:
+    
     const SurfaceCollection* slices;
     const ExPolygonCollection* lower_slices;
     double layer_height;
+    
     int layer_id;
     Flow perimeter_flow;
     Flow ext_perimeter_flow;
@@ -77,6 +88,7 @@ public:
             _ext_mm3_per_mm(-1), _mm3_per_mm(-1), _mm3_per_mm_overhang(-1)
         {};
     void process();
+    
     
     private:
     double _ext_mm3_per_mm;

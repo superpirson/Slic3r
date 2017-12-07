@@ -26,10 +26,7 @@ PerimeterGenerator::process()
     
     // solid infill
     coord_t ispacing            = this->solid_infill_flow.scaled_spacing();
-  
-    bool use_angled_extruder = false;
-    float angled_extruder_height;
-    float angled_extruder_width;
+
     if (print_config->use_angled_extruder.get_at(config->perimeter_extruder-1)){
     	use_angled_extruder=true;
     	angled_extruder_height=print_config->angled_extruder_height.get_at(config->perimeter_extruder-1);
@@ -410,6 +407,10 @@ PerimeterGenerator::_traverse_loops(const PerimeterGeneratorLoops &loops,
             path.polyline   = loop->polygon.split_at_first_point();
             path.mm3_per_mm = is_external ? this->_ext_mm3_per_mm           : this->_mm3_per_mm;
             path.width      = is_external ? this->ext_perimeter_flow.width  : this->perimeter_flow.width;
+            
+            Point dir = path.polyline.direction_vector();
+            path.width *=(angled_extruder_height*dir.y+angled_extruder_width*dir.x);
+            
             path.height     = this->layer_height;
             paths.push_back(path);
         }

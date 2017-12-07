@@ -37,6 +37,20 @@ Polyline::leftmost_point() const
     return p;
 }
 
+Point Polyline::direction_vector() const {
+    	Point newpoint = this->last_point() - this->first_point();
+    	long long int root =sqrt(pow(newpoint.x,2)+pow(newpoint.y,2));
+    	//printf("n= (%ld,%ld) and |n| = %f so n`=(%f,%f)\n",newpoint.x,newpoint.y,root, newpoint.x/root, newpoint.y/root);
+    	if (root==0){
+    	//fprintf(stderr,"error! Floating point prob due to div by zero!\n");
+    	return Point(1,1);
+    	}
+   	newpoint.x=newpoint.x/root;
+    	newpoint.y=newpoint.y/root;
+
+     	return newpoint;
+    }
+    
 Lines
 Polyline::lines() const
 {

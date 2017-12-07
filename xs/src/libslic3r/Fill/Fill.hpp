@@ -78,7 +78,7 @@ public:
     virtual bool can_solid() const { return false; };
 
     // Perform the fill.
-    virtual Polylines fill_surface(const Surface &surface);
+    virtual Polylines fill_surface(const Surface &surface,double nozz_width, double nozz_hight);
     
     coordf_t spacing() const { return this->_spacing; };
     

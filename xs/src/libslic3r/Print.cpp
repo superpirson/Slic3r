@@ -56,6 +56,7 @@ Print::Print()
 :   total_used_filament(0),
     total_extruded_volume(0)
 {
+   
 }
 
 Print::~Print()
@@ -597,7 +598,15 @@ Print::apply_config(DynamicPrintConfig config)
         }
         invalidated = true;
     }
-    
+    /*
+    if (config.use_angled_extruder.get_at(this->objects.front()->config.support_material_extruder-1)){
+    	use_angled_extruder=true;
+    	extruder_len=config.angled_extruder_height.get_at(this->objects.front()->config.support_material_extruder-1);
+    	extruder_wid=config.angled_extruder_width.get_at(this->objects.front()->config.support_material_extruder-1);
+    	//fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
+   		
+    }
+    //*/
     return invalidated;
 }
 
@@ -616,6 +625,9 @@ bool Print::has_skirt() const
 std::string
 Print::validate() const
 {
+    
+    
+    
     if (this->config.complete_objects) {
         // check horizontal clearance
         {
@@ -807,16 +819,7 @@ void
 Print::_make_brim()
 {
 
-    bool use_angled_extruder = false;
-    float extruder_len;
-    float extruder_wid;
-    if (config.use_angled_extruder.get_at(this->objects.front()->config.support_material_extruder-1)){
-    	use_angled_extruder=true;
-    	extruder_len=config.angled_extruder_height.get_at(this->objects.front()->config.support_material_extruder-1);
-    	extruder_wid=config.angled_extruder_width.get_at(this->objects.front()->config.support_material_extruder-1);
-    	//fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
-   		
-    }
+  
     
     if (this->state.is_done(psBrim)) return;
     this->state.set_started(psBrim);
@@ -927,6 +930,20 @@ Print::_make_brim()
             }
         }
         
+        
+        if (config.use_angled_extruder.get_at(this->objects.front()->config.support_material_extruder-1)){
+    		use_angled_extruder=true;
+    		extruder_len=config.angled_extruder_height.get_at(this->objects.front()->config.support_material_extruder-1);
+    		extruder_wid=config.angled_extruder_width.get_at(this->objects.front()->config.support_material_extruder-1);
+    		//fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
+   		
+    	}
+    	double len=1.0;
+    	double wid=1.0;
+    	if (use_angled_extruder){
+      	  len=this->extruder_len;
+       	 wid=this->extruder_wid;
+        }
         std::unique_ptr<Fill> filler(Fill::new_from_type(ipRectilinear));
         filler->min_spacing  = flow.spacing();
         filler->dont_adjust  = true;
@@ -945,8 +962,9 @@ Print::_make_brim()
             filler->angle = line->direction();
             for (ExPolygons::const_iterator ex = expp.begin(); ex != expp.end(); ++ex) {
                 append_to(other, (Polygons)*ex);
-                
-                const Polylines paths = filler->fill_surface(Surface(stBottom, *ex));
+               
+                const Polylines paths = filler->fill_surface(Surface(stBottom, *ex),len,wid);
+               
                 for (Polylines::const_iterator pl = paths.begin(); pl != paths.end(); ++pl) {
                     ExtrusionPath path(erSkirt, mm3_per_mm, flow.width, flow.height);
                     path.polyline = *pl;

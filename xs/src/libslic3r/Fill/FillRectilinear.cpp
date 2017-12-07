@@ -455,6 +455,8 @@ void FillRectilinear::_fill_surface_single(
     ExPolygon                       &expolygon,
     Polylines*                      out)
 {
+
+
     this->_fill_single_direction(expolygon, direction, 0, out);
 }
 

@@ -34,14 +34,14 @@ LayerRegion::make_fill()
     
     
     
- /*   
+ 	//*   
     bool use_angled_extruder = false;
-    float angled_extruder_height;
-    float angled_extruder_width;
-    if (this->region()->config.use_angled_extruder.get_at(config->perimeter_extruder-1)){
+    double angled_extruder_height=1.0;
+    double angled_extruder_width=1.0;
+    if (this->region()->print()->config.use_angled_extruder.get_at(this->region()->config.infill_extruder-1)){
     	use_angled_extruder=true;
-    	angled_extruder_height=this->region()->config.angled_extruder_height.get_at(config->infill_extruder-1);
-    	angled_extruder_width=this->region()->config.angled_extruder_width.get_at(config->infill_extruder-1);
+    	angled_extruder_height=this->region()->print()->config.angled_extruder_height.get_at(this->region()->config.infill_extruder-1);
+    	angled_extruder_width=this->region()->print()->config.angled_extruder_width.get_at(this->region()->config.infill_extruder-1);
     	//fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
    		
     }
@@ -272,7 +272,7 @@ LayerRegion::make_fill()
             << " angle: " << f->angle << " min-spacing: " << f->min_spacing
             << " endpoints_overlap: " << f->endpoints_overlap << std::endl << std::endl;
         */
-        Polylines polylines = f->fill_surface(surface);
+        Polylines polylines = f->fill_surface(surface,angled_extruder_width,angled_extruder_height);
         if (polylines.empty())
             continue;
 

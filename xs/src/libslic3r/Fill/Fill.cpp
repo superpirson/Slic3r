@@ -49,8 +49,10 @@ Fill::new_from_type(const std::string &type)
 }
 
 Polylines
-Fill::fill_surface(const Surface &surface)
+Fill::fill_surface(const Surface &surface, double nozz_width, double nozz_hight)
 {
+    //fprintf(stderr,"we got a nozz_width of %f and hight of %f!\n", nozz_width, nozz_hight);
+    
     if (this->density == 0) return Polylines();
     
     // Perform offset.
@@ -62,7 +64,8 @@ Fill::fill_surface(const Surface &surface)
     // Create the infills for each of the regions.
     Polylines polylines_out;
     Fill::direction_t infill_dir= this->_infill_direction(surface);
-    
+    double  root =sqrt(pow(std::get<1>(infill_dir).x,2)+pow(std::get<1>(infill_dir).y,2));
+    this->density = this->density*((std::get<1>(infill_dir).x*nozz_width)/root+(std::get<1>(infill_dir).y*nozz_hight)/root);
     for (size_t i = 0; i < expp.size(); ++i)
         this->_fill_surface_single(
             surface.thickness_layers,

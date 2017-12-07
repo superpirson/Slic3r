@@ -57,7 +57,7 @@
             PolylineCollection *pc = NULL;
             if (THIS->fill != NULL) {
                 pc = new PolylineCollection();
-                pc->polylines = THIS->fill->fill_surface(*surface);
+                pc->polylines = THIS->fill->fill_surface(*surface,1.0,1.0);
             }
             RETVAL =  pc;
         %};
