@@ -15,14 +15,13 @@ Extruder::Extruder(unsigned int id, GCodeConfig *config)
         this->e_per_mm3 = this->extrusion_multiplier()
             * (4 / ((this->filament_diameter() * this->filament_diameter()) * PI));
     }
-    
+    this->angled_e=false;
     if (this->use_angled_extruder()){
     	this->angled_e=true;
     	//normalize the width and hight
     	double root =sqrt(pow(angled_extruder_height(),2.0)+pow(angled_extruder_width(),2.0));
     	this->extruder_len=this->angled_extruder_height()/root;
     	this->extruder_wid=this->angled_extruder_width()/root;
-    	
     }
     this->retract_speed_mm_min = this->retract_speed() * 60;
 }
@@ -47,8 +46,9 @@ Extruder::extrude(double dE, double dx, double dy)
     if (this->angled_e){
     	double root = sqrt(pow(dx,2)+pow(dy,2));
     	dE= dE*((dx/root)*extruder_len+(dy/root)*extruder_wid);
+    	printf("The alternate dE we calculated was %f\n", dE);
     }	
-  this->E += dE;
+    this->E += dE;
     this->absolute_E += dE;
     
     return dE;

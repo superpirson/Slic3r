@@ -63,10 +63,21 @@ Fill::fill_surface(const Surface &surface, double nozz_width, double nozz_hight)
     
     // Create the infills for each of the regions.
     Polylines polylines_out;
+    
     Fill::direction_t infill_dir= this->_infill_direction(surface);
+    if(nozz_width != 1.0){
+	if(nozz_width>nozz_hight){
+		infill_dir.first = 0;
+		infill_dir.second= Point(0,1);
+    	}else{
+    		infill_dir.first=1.57;
+    		infill_dir.second= Point(1,0);
+	}
+    }
     double  root =sqrt(pow(std::get<1>(infill_dir).x,2)+pow(std::get<1>(infill_dir).y,2));
     double  nozz_root =sqrt(pow(nozz_width,2)+pow(nozz_hight,2));
-    this->density = this->density*((std::get<1>(infill_dir).x/root*nozz_width/nozz_root)+(std::get<1>(infill_dir).y/root*nozz_hight/nozz_root));
+    double blend_fac = (infill_dir.second.y/root *nozz_width/nozz_root)+(infill_dir.second.x/root*nozz_hight/nozz_root);
+    this->density = this->density/blend_fac;
     
     for (size_t i = 0; i < expp.size(); ++i)
         this->_fill_surface_single(
