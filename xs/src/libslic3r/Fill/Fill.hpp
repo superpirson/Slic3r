@@ -11,7 +11,7 @@
 #include "../ExPolygon.hpp"
 #include "../Polyline.hpp"
 #include "../PrintConfig.hpp"
-
+#include "../Extruder.hpp"
 namespace Slic3r {
 
 class Surface;
@@ -78,7 +78,7 @@ public:
     virtual bool can_solid() const { return false; };
 
     // Perform the fill.
-    virtual Polylines fill_surface(const Surface &surface,double nozz_width, double nozz_hight);
+    virtual Polylines fill_surface(const Surface &surface,Extruder * infill_extruder);
     
     coordf_t spacing() const { return this->_spacing; };
     
