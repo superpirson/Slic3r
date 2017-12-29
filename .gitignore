@@ -16,3 +16,6 @@ package/osx/Slic3r*.app
 *.dmg
 *.swp
 *.swo
+/ANGST PowerPoint Alex Patton.pdf
+/Build.PL~
+/debugout.txt

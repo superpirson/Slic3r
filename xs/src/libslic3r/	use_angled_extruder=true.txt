@@ -1,0 +1,5 @@
+	use_angled_extruder=true;
+    	angled_extruder_height=print_config->angled_extruder_height.get_at(config->perimeter_extruder-1);
+    	angled_extruder_width=print_config->angled_extruder_width.get_at(config->perimeter_extruder-1);
+    	fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
+   	

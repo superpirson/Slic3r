@@ -73,12 +73,13 @@ Fill::fill_surface(const Surface &surface, double nozz_width, double nozz_hight)
     		infill_dir.first=1.57;
     		infill_dir.second= Point(1,0);
 	}
-    }
+    
     double  root =sqrt(pow(std::get<1>(infill_dir).x,2)+pow(std::get<1>(infill_dir).y,2));
     double  nozz_root =sqrt(pow(nozz_width,2)+pow(nozz_hight,2));
     double blend_fac = (infill_dir.second.y/root *nozz_width/nozz_root)+(infill_dir.second.x/root*nozz_hight/nozz_root);
     this->density = this->density/blend_fac;
-    
+
+    }
     for (size_t i = 0; i < expp.size(); ++i)
         this->_fill_surface_single(
             surface.thickness_layers,
