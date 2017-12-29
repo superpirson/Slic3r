@@ -355,6 +355,7 @@ class GCodeConfig : public virtual StaticPrintConfig
     GCodeConfig(bool initialize = true) : StaticPrintConfig() {
         if (initialize)
             this->set_defaults();
+        //TODO: Fix this so it generates the dog damn extruders here, instead of inside the gcodewritter
     }
     
     virtual ConfigOption* optptr(const t_config_option_key &opt_key, bool create = false) {
