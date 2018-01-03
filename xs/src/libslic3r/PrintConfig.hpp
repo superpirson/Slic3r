@@ -352,10 +352,17 @@ class GCodeConfig : public virtual StaticPrintConfig
     ConfigOptionBool                use_relative_e_distances;
     ConfigOptionBool                use_volumetric_e;
     
+    //Prebuilt extruder objects packaged in a map
+    std::map<unsigned int,Extruder>	 extruder_objects;
+
+
     GCodeConfig(bool initialize = true) : StaticPrintConfig() {
         if (initialize)
             this->set_defaults();
-        //TODO: Fix this so it generates the dog damn extruders here, instead of inside the gcodewritter
+
+
+    for (std::vector<unsigned int>::const_iterator i = use_angled_extruder.values.begin(); i != use_angled_extruder.values.end(); ++i)
+        this->extruder_objects.insert( std::pair<unsigned int,Extruder>(*i, Extruder(*i, this)) );
     }
     
     virtual ConfigOption* optptr(const t_config_option_key &opt_key, bool create = false) {

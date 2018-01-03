@@ -22,6 +22,7 @@ public:
     Extruder* extruder() const { return this->_extruder; }
     std::string extrusion_axis() const { return this->_extrusion_axis; }
     void apply_print_config(const PrintConfig &print_config);
+    [[deprecated]]
     void set_extruders(const std::vector<unsigned int> &extruder_ids);
     /// Write any notes provided by the user as comments in the gcode header.
     std::string notes();

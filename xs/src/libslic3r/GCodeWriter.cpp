@@ -20,11 +20,16 @@ GCodeWriter::apply_print_config(const PrintConfig &print_config)
 {
     this->config.apply(print_config, true);
     this->_extrusion_axis = this->config.get_extrusion_axis();
+    this->extruders=this->config.extruder_objects;
+    //todo TEST LOGIC OF THIS!
+    this->multiple_extruders = (*std::max_element(this->extruders.begin(), this->extruders.end())) > 0;
+
 }
 
 void
 GCodeWriter::set_extruders(const std::vector<unsigned int> &extruder_ids)
 {
+	fprintf(stderr, "Error! Call to deprecated function set_extruders!\n");
     for (std::vector<unsigned int>::const_iterator i = extruder_ids.begin(); i != extruder_ids.end(); ++i)
         this->extruders.insert( std::pair<unsigned int,Extruder>(*i, Extruder(*i, &this->config)) );
     
