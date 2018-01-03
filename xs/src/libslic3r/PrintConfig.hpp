@@ -24,7 +24,7 @@
 #define OPT_PTR(KEY) if (opt_key == #KEY) return &this->KEY
 
 namespace Slic3r {
-
+class Extruder;
 enum GCodeFlavor {
     gcfRepRap, gcfTeacup, gcfMakerWare, gcfSailfish, gcfMach3, gcfMachinekit, gcfNoExtrusion, gcfSmoothie, gcfRepetier,
 };
@@ -355,17 +355,7 @@ class GCodeConfig : public virtual StaticPrintConfig
     //Prebuilt extruder objects packaged in a map
     std::map<unsigned int,Extruder>	 extruder_objects;
 
-
-    GCodeConfig(bool initialize = true) : StaticPrintConfig() {
-        if (initialize)
-            this->set_defaults();
-
-
-
-   	  for (int i = 0; i < use_angled_extruder.values.size(); ++i){
-        this->extruder_objects.insert( std::pair<unsigned int,Extruder>(*i, Extruder(*i, this)) );
-   	  }
-    }
+    GCodeConfig(bool initialize = true);
 
     virtual ConfigOption* optptr(const t_config_option_key &opt_key, bool create = false) {
         OPT_PTR(before_layer_gcode);

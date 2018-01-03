@@ -2,8 +2,19 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/thread.hpp>
-
+#include "Extruder.hpp"
 namespace Slic3r {
+
+
+GCodeConfig::GCodeConfig(bool initialize = true) : StaticPrintConfig() {
+    if (initialize)
+        this->set_defaults();
+
+	  for (int i = 0; i < use_angled_extruder.values.size(); ++i){
+    this->extruder_objects.insert( std::pair<unsigned int,Extruder>(*i, Extruder(*i, this)) );
+	  }
+}
+
 
 PrintConfigDef::PrintConfigDef()
 {
