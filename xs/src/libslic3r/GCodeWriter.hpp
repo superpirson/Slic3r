@@ -12,7 +12,7 @@ namespace Slic3r {
 class GCodeWriter {
 public:
     GCodeConfig config;
-    std::map<unsigned int,Extruder> extruders;
+    std::map<unsigned int,Extruder*> extruders;
     bool multiple_extruders;
     
     GCodeWriter()

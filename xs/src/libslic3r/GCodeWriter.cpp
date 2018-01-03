@@ -29,7 +29,7 @@ GCodeWriter::apply_print_config(const PrintConfig &print_config)
 void
 GCodeWriter::set_extruders(const std::vector<unsigned int> &extruder_ids)
 {
-	fprintf(stderr, "Error! Call to deprecated function set_extruders!\n");
+	fprintf(stderr, "Warning: Call to deprecated function set_extruders!\n");
     for (std::vector<unsigned int>::const_iterator i = extruder_ids.begin(); i != extruder_ids.end(); ++i)
         this->extruders.insert( std::pair<unsigned int,Extruder>(*i, Extruder(*i, &this->config)) );
     

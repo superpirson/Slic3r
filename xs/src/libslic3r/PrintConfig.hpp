@@ -353,7 +353,7 @@ class GCodeConfig : public virtual StaticPrintConfig
     ConfigOptionBool                use_volumetric_e;
     
     //Prebuilt extruder objects packaged in a map
-    std::map<unsigned int,Extruder>	 extruder_objects;
+    std::map<unsigned int,Extruder*>	 extruder_objects;
 
     GCodeConfig(bool initialize = true);
 
