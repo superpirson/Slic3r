@@ -361,10 +361,12 @@ class GCodeConfig : public virtual StaticPrintConfig
             this->set_defaults();
 
 
-    for (std::vector<unsigned int>::const_iterator i = use_angled_extruder.values.begin(); i != use_angled_extruder.values.end(); ++i)
+
+   	  for (int i = 0; i < use_angled_extruder.values.size(); ++i){
         this->extruder_objects.insert( std::pair<unsigned int,Extruder>(*i, Extruder(*i, this)) );
+   	  }
     }
-    
+
     virtual ConfigOption* optptr(const t_config_option_key &opt_key, bool create = false) {
         OPT_PTR(before_layer_gcode);
         OPT_PTR(between_objects_gcode);

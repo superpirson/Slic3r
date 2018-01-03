@@ -7,6 +7,7 @@
 #include "SupportMaterial.hpp"
 #include "Extruder.hpp"
 #include <algorithm>
+#include <map>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -962,7 +963,8 @@ Print::_make_brim()
             for (ExPolygons::const_iterator ex = expp.begin(); ex != expp.end(); ++ex) {
                 append_to(other, (Polygons)*ex);
                
-                const Polylines paths = filler->fill_surface(Surface(stBottom, *ex), this->config.extruder_objects[this->brim_extruder()]);
+
+                const Polylines paths = filler->fill_surface( Surface(stBottom, *ex), this->config.extruder_objects[this->brim_extruder()]);
                
                 for (Polylines::const_iterator pl = paths.begin(); pl != paths.end(); ++pl) {
                     ExtrusionPath path(erSkirt, mm3_per_mm, flow.width, flow.height);
