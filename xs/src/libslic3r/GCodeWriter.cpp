@@ -22,7 +22,7 @@ GCodeWriter::apply_print_config(const PrintConfig &print_config)
     this->_extrusion_axis = this->config.get_extrusion_axis();
     this->extruders=this->config.extruder_objects;
     //todo TEST LOGIC OF THIS!
-    this->multiple_extruders = (*std::max_element(this->extruders.begin(), this->extruders.end())) > 0;
+    this->multiple_extruders = (*std::max_element(this->extruders.begin(), this->extruders.end()))> 0;
 
 }
 

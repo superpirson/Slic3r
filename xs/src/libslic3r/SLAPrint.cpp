@@ -192,8 +192,8 @@ SLAPrint::_infill_layer(size_t i, const Fill* _fill)
         templ.width = fill->spacing();
         const ExPolygons internal_ex = intersection_ex(infill, internal);
         for (ExPolygons::const_iterator it = internal_ex.begin(); it != internal_ex.end(); ++it) {
-        
-            Polylines polylines = fill->fill_surface(Surface(stInternal, *it),1.0,1.0);
+        	//todo, fix segfault problem that will be caused by this hack
+            Polylines polylines = fill->fill_surface(Surface(stInternal, *it),NULL);
             layer.infill.append(polylines, templ);
         }
     }
