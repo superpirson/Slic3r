@@ -1214,7 +1214,7 @@ sub options {
         start_gcode end_gcode before_layer_gcode layer_gcode toolchange_gcode between_objects_gcode
         nozzle_diameter extruder_offset min_layer_height max_layer_height
         retract_length retract_lift retract_speed retract_restart_extra retract_before_travel retract_layer_change wipe
-        retract_length_toolchange retract_restart_extra_toolchange retract_lift_above retract_lift_below
+        retract_length_toolchange retract_restart_extra_toolchange use_angled_extruder angled_extruder_width angled_extruder_height retract_lift_above retract_lift_below
         printer_settings_id
         printer_notes
     );
@@ -1524,7 +1524,7 @@ sub _build_extruder_pages {
 	{
             my $optgroup = $page->new_optgroup('Angled Extruder');
     	    $optgroup->append_single_option_line($_, $extruder_idx)
-		for qw(angled_extruder_width angled_extruder_height);
+		for qw(use_angled_extruder angled_extruder_width angled_extruder_height);
         }
     }
     
