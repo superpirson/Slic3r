@@ -11,7 +11,7 @@ GCodeConfig::GCodeConfig(bool initialize) : StaticPrintConfig() {
         this->set_defaults();
 
 	  for (int i = 0; i < use_angled_extruder.values.size(); ++i){
-    this->extruder_objects.insert( std::pair<unsigned int,Extruder>(i, new Extruder(i, this)) );
+    this->extruder_objects.insert( std::pair<unsigned int,Extruder*>(i, new Extruder(i, this)) );
 	  }
 }
 

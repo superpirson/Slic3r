@@ -22,7 +22,7 @@ GCodeWriter::apply_print_config(const PrintConfig &print_config)
     this->_extrusion_axis = this->config.get_extrusion_axis();
     this->extruders=this->config.extruder_objects;
     //todo TEST LOGIC OF THIS!
-    this->multiple_extruders = (*std::max_element(this->extruders.begin(), this->extruders.end()))> 0;
+    this->multiple_extruders = (this->extruders.size())> 1;
 
 }
 
@@ -31,7 +31,7 @@ GCodeWriter::set_extruders(const std::vector<unsigned int> &extruder_ids)
 {
 	fprintf(stderr, "Warning: Call to deprecated function set_extruders!\n");
     for (std::vector<unsigned int>::const_iterator i = extruder_ids.begin(); i != extruder_ids.end(); ++i)
-        this->extruders.insert( std::pair<unsigned int,Extruder>(*i, Extruder(*i, &this->config)) );
+        this->extruders.insert( std::pair<unsigned int,Extruder*>(*i, new Extruder(*i, &this->config)) );
     
     /*  we enable support for multiple extruder if any extruder greater than 0 is used
         (even if prints only uses that one) since we need to output Tx commands
@@ -297,7 +297,7 @@ std::string
 GCodeWriter::toolchange(unsigned int extruder_id)
 {
     // set the new extruder
-    this->_extruder = &this->extruders.find(extruder_id)->second;
+    this->_extruder = this->extruders.find(extruder_id)->second;
     
     // return the toolchange command
     // if we are running a single-extruder setup, just set the extruder and return nothing
