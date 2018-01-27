@@ -20,18 +20,13 @@ GCodeWriter::apply_print_config(const PrintConfig &print_config)
 {
     this->config.apply(print_config, true);
     this->_extrusion_axis = this->config.get_extrusion_axis();
-    this->extruders=this->config.extruder_objects;
-    //todo TEST LOGIC OF THIS!
-    this->multiple_extruders = (this->extruders.size())> 1;
-
 }
 
 void
 GCodeWriter::set_extruders(const std::vector<unsigned int> &extruder_ids)
 {
-	fprintf(stderr, "Warning: Call to deprecated function set_extruders!\n");
     for (std::vector<unsigned int>::const_iterator i = extruder_ids.begin(); i != extruder_ids.end(); ++i)
-        this->extruders.insert( std::pair<unsigned int,Extruder*>(*i, new Extruder(*i, &this->config)) );
+        this->extruders.insert( std::pair<unsigned int,Extruder>(*i, Extruder(*i, &this->config)) );
     
     /*  we enable support for multiple extruder if any extruder greater than 0 is used
         (even if prints only uses that one) since we need to output Tx commands
@@ -297,7 +292,7 @@ std::string
 GCodeWriter::toolchange(unsigned int extruder_id)
 {
     // set the new extruder
-    this->_extruder = this->extruders.find(extruder_id)->second;
+    this->_extruder = &this->extruders.find(extruder_id)->second;
     
     // return the toolchange command
     // if we are running a single-extruder setup, just set the extruder and return nothing
@@ -473,18 +468,14 @@ GCodeWriter::retract_for_toolchange()
     return this->_retract(
         this->_extruder->retract_length_toolchange(),
         this->_extruder->retract_restart_extra_toolchange(),
-        "retract for toolchange",
-        true
+        "retract for toolchange"
     );
 }
 
 std::string
-GCodeWriter::_retract(double length, double restart_extra, const std::string &comment, bool long_retract)
+GCodeWriter::_retract(double length, double restart_extra, const std::string &comment)
 {
     std::ostringstream gcode;
-    std::ostringstream outcomment;
-
-    outcomment << comment;
     
     /*  If firmware retraction is enabled, we use a fake value of 1
         since we ignore the actual configured retract_length which 
@@ -501,20 +492,17 @@ GCodeWriter::_retract(double length, double restart_extra, const std::string &co
 
     double dE = this->_extruder->retract(length, restart_extra);
     if (dE != 0) {
-        outcomment << " extruder " << this->_extruder->id;
         if (this->config.use_firmware_retraction) {
             if (FLAVOR_IS(gcfMachinekit))
-                gcode << "G22";
-            else if ((FLAVOR_IS(gcfRepRap) || FLAVOR_IS(gcfRepetier)) && long_retract)
-                gcode << "G10 S1";
+                gcode << "G22 ; retract\n";
             else
-                gcode << "G10";
+                gcode << "G10 ; retract\n";
         } else {
             gcode << "G1 " << this->_extrusion_axis << E_NUM(this->_extruder->E)
                            << " F" << this->_extruder->retract_speed_mm_min;
+            COMMENT(comment);
+            gcode << "\n";
         }
-        COMMENT(outcomment.str());
-        gcode << "\n";
     }
     
     if (FLAVOR_IS(gcfMakerWare))
@@ -535,17 +523,15 @@ GCodeWriter::unretract()
     if (dE != 0) {
         if (this->config.use_firmware_retraction) {
             if (FLAVOR_IS(gcfMachinekit))
-                 gcode << "G23";
+                 gcode << "G23 ; unretract\n";
             else
-                 gcode << "G11";
-            if (this->config.gcode_comments) gcode << " ; unretract extruder " << this->_extruder->id;
-            gcode << "\n";
+                 gcode << "G11 ; unretract\n";
             gcode << this->reset_e();
         } else {
             // use G1 instead of G0 because G0 will blend the restart with the previous travel move
             gcode << "G1 " << this->_extrusion_axis << E_NUM(this->_extruder->E)
                            << " F" << this->_extruder->retract_speed_mm_min;
-            if (this->config.gcode_comments) gcode << " ; unretract extruder " << this->_extruder->id;
+            if (this->config.gcode_comments) gcode << " ; unretract";
             gcode << "\n";
         }
     }

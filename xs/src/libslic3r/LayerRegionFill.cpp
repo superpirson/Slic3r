@@ -272,8 +272,7 @@ LayerRegion::make_fill()
             << " angle: " << f->angle << " min-spacing: " << f->min_spacing
             << " endpoints_overlap: " << f->endpoints_overlap << std::endl << std::endl;
         */
-        PrintRegionConfig* conf = &this->region()->config;
-        Polylines polylines = f->fill_surface(surface,this->region()->print()->config.extruder_objects.at(conf->infill_extruder));
+        Polylines polylines = f->fill_surface(surface,angled_extruder_width,angled_extruder_height);
         if (polylines.empty())
             continue;
 

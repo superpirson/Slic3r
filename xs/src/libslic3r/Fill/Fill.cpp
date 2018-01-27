@@ -6,7 +6,6 @@
 #include "../Geometry.hpp"
 #include "../Surface.hpp"
 #include "../PrintConfig.hpp"
-#include "../Extruder.hpp"
 
 #include "Fill.hpp"
 #include "FillConcentric.hpp"
@@ -50,7 +49,7 @@ Fill::new_from_type(const std::string &type)
 }
 
 Polylines
-Fill::fill_surface(const Surface &surface,Extruder * infill_extruder)
+Fill::fill_surface(const Surface &surface, double nozz_width, double nozz_hight)
 {
     //fprintf(stderr,"we got a nozz_width of %f and hight of %f!\n", nozz_width, nozz_hight);
     
@@ -66,9 +65,8 @@ Fill::fill_surface(const Surface &surface,Extruder * infill_extruder)
     Polylines polylines_out;
     
     Fill::direction_t infill_dir= this->_infill_direction(surface);
-    if(infill_extruder->angled_e ){
-    	//TODO move this functionality into extruder.cpp
-	if(infill_extruder->extruder_wid>infill_extruder->extruder_len){
+    if(nozz_width != 1.0){
+	if(nozz_width>nozz_hight){
 		infill_dir.first = 0;
 		infill_dir.second= Point(0,1);
     	}else{
@@ -77,8 +75,8 @@ Fill::fill_surface(const Surface &surface,Extruder * infill_extruder)
 	}
     
     double  root =sqrt(pow(std::get<1>(infill_dir).x,2)+pow(std::get<1>(infill_dir).y,2));
-    double  nozz_root =sqrt(pow(infill_extruder->extruder_wid,2)+pow(infill_extruder->extruder_len,2));
-    double blend_fac = (infill_dir.second.y/root *infill_extruder->extruder_wid/nozz_root)+(infill_dir.second.x/root*infill_extruder->extruder_len/nozz_root);
+    double  nozz_root =sqrt(pow(nozz_width,2)+pow(nozz_hight,2));
+    double blend_fac = (infill_dir.second.y/root *nozz_width/nozz_root)+(infill_dir.second.x/root*nozz_hight/nozz_root);
     this->density = this->density/blend_fac;
 
     }

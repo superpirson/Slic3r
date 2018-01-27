@@ -57,10 +57,7 @@
             PolylineCollection *pc = NULL;
             if (THIS->fill != NULL) {
                 pc = new PolylineCollection();
-                printf(stderr, "ERROR! We called _fill_surface from perl when that func is deprecated!\n");
-                /*
                 pc->polylines = THIS->fill->fill_surface(*surface,1.0,1.0);
-                */
             }
             RETVAL =  pc;
         %};

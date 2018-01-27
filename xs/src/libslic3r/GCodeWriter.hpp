@@ -12,7 +12,7 @@ namespace Slic3r {
 class GCodeWriter {
 public:
     GCodeConfig config;
-    std::map<unsigned int,Extruder*> extruders;
+    std::map<unsigned int,Extruder> extruders;
     bool multiple_extruders;
     
     GCodeWriter()
@@ -22,7 +22,6 @@ public:
     Extruder* extruder() const { return this->_extruder; }
     std::string extrusion_axis() const { return this->_extrusion_axis; }
     void apply_print_config(const PrintConfig &print_config);
-    [[deprecated]]
     void set_extruders(const std::vector<unsigned int> &extruder_ids);
     /// Write any notes provided by the user as comments in the gcode header.
     std::string notes();
@@ -61,7 +60,7 @@ private:
     Pointf3 _pos;
     
     std::string _travel_to_z(double z, const std::string &comment);
-    std::string _retract(double length, double restart_extra, const std::string &comment, bool long_retract = false);
+    std::string _retract(double length, double restart_extra, const std::string &comment);
 };
 
 } /* namespace Slic3r */

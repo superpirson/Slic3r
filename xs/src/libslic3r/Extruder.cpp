@@ -18,7 +18,7 @@ Extruder::Extruder(unsigned int id, GCodeConfig *config)
     this->angled_e=false;
     if (this->use_angled_extruder()){
     	this->angled_e=true;
-    	//normalize the width and height
+    	//normalize the width and hight
     	double root =sqrt(pow(angled_extruder_height(),2.0)+pow(angled_extruder_width(),2.0));
     	this->extruder_len=this->angled_extruder_height()/root;
     	this->extruder_wid=this->angled_extruder_width()/root;

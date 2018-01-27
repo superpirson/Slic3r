@@ -5,9 +5,7 @@
 #include "Flow.hpp"
 #include "Geometry.hpp"
 #include "SupportMaterial.hpp"
-#include "Extruder.hpp"
 #include <algorithm>
-#include <map>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -56,10 +54,7 @@ template class PrintState<PrintObjectStep>;
 
 Print::Print()
 :   total_used_filament(0),
-	total_weight(0),
-	total_cost(0),
     total_extruded_volume(0)
-
 {
    
 }
@@ -779,7 +774,6 @@ Print::brim_flow() const
 {
     ConfigOptionFloatOrPercent width = this->config.first_layer_extrusion_width;
     if (width.value == 0) width = this->regions.front()->config.perimeter_extrusion_width;
-    if (width.value == 0) width = this->objects.front()->config.extrusion_width;
     
     /* We currently use a random region's perimeter extruder.
        While this works for most cases, we should probably consider all of the perimeter
@@ -806,7 +800,6 @@ Print::skirt_flow() const
 {
     ConfigOptionFloatOrPercent width = this->config.first_layer_extrusion_width;
     if (width.value == 0) width = this->regions.front()->config.perimeter_extrusion_width;
-    if (width.value == 0) width = this->objects.front()->config.extrusion_width;
     
     /* We currently use a random object's support material extruder.
        While this works for most cases, we should probably consider all of the support material
@@ -937,7 +930,7 @@ Print::_make_brim()
             }
         }
         
-        /*
+        
         if (config.use_angled_extruder.get_at(this->objects.front()->config.support_material_extruder-1)){
     		use_angled_extruder=true;
     		extruder_len=config.angled_extruder_height.get_at(this->objects.front()->config.support_material_extruder-1);
@@ -945,7 +938,12 @@ Print::_make_brim()
     		//fprintf(stderr,"We just decided to use angled extruder that is %fx%f mm.\n",angled_extruder_height,angled_extruder_width );
    		
     	}
-        */
+    	double len=1.0;
+    	double wid=1.0;
+    	if (use_angled_extruder){
+      	  len=this->extruder_len;
+       	 wid=this->extruder_wid;
+        }
         std::unique_ptr<Fill> filler(Fill::new_from_type(ipRectilinear));
         filler->min_spacing  = flow.spacing();
         filler->dont_adjust  = true;
@@ -965,8 +963,7 @@ Print::_make_brim()
             for (ExPolygons::const_iterator ex = expp.begin(); ex != expp.end(); ++ex) {
                 append_to(other, (Polygons)*ex);
                
-
-                const Polylines paths = filler->fill_surface( Surface(stBottom, *ex), this->config.extruder_objects[this->brim_extruder()]);
+                const Polylines paths = filler->fill_surface(Surface(stBottom, *ex),len,wid);
                
                 for (Polylines::const_iterator pl = paths.begin(); pl != paths.end(); ++pl) {
                     ExtrusionPath path(erSkirt, mm3_per_mm, flow.width, flow.height);

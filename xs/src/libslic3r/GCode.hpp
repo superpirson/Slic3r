@@ -10,7 +10,6 @@
 #include "PlaceholderParser.hpp"
 #include "Print.hpp"
 #include "PrintConfig.hpp"
-#include "ConditionalGcode.hpp"
 #include <string>
 
 namespace Slic3r {

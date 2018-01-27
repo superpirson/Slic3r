@@ -96,12 +96,12 @@ Flow::_auto_width(FlowRole role, float nozzle_diameter, float height) {
     float width = ((nozzle_diameter*nozzle_diameter) * PI + (height*height) * (4.0 - PI)) / (4.0 * height);
     
     float min = nozzle_diameter * 1.05;
-    float max = nozzle_diameter * 1.25; // cap width to 1.25x nozzle diameter
+    float max = nozzle_diameter * 3; // cap width to 3x nozzle diameter
     if (role == frExternalPerimeter || role == frSupportMaterial || role == frSupportMaterialInterface) {
-        min = max = nozzle_diameter*1.1;
+        min = max = nozzle_diameter;
     } else if (role != frInfill) {
-        // limit width a bit for sparse infill to avoid unwanted overextrusion.
-        max = nozzle_diameter * 1.4;
+        // do not limit width for sparse infill so that we use full native flow for it
+        max = nozzle_diameter * 1.7;
     }
     if (width > max) width = max;
     if (width < min) width = min;
