@@ -30,8 +30,9 @@ FillRectilinear::_fill_single_direction(ExPolygon expolygon,
     assert(this->density > 0.0001f && this->density <= 1.f);
     const coord_t min_spacing   = scale_(this->min_spacing);
     // altered spaceing config based on if nozzle is actually angled
+
     coord_t line_spacing        = (double) min_spacing / this->density;
-    
+
     // We ignore this->bounding_box because it doesn't matter; we're doing align_to_grid below.
     BoundingBox bounding_box    = expolygon.contour.bounding_box();
     

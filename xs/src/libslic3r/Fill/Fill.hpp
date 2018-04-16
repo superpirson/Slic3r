@@ -99,6 +99,7 @@ protected:
         dont_adjust(false),
         complete(false),
         _spacing(0.f)
+
         {};
     
     typedef std::pair<float, Point> direction_t;

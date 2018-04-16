@@ -52,12 +52,13 @@ Polylines
 Fill::fill_surface(const Surface &surface, double nozz_width, double nozz_hight)
 {
     //fprintf(stderr,"we got a nozz_width of %f and hight of %f!\n", nozz_width, nozz_hight);
-    
+
     if (this->density == 0) return Polylines();
     
     // Perform offset.
     ExPolygons expp = offset_ex(surface.expolygon, -scale_(this->min_spacing)/2);
-    
+    //TODO implement selective spacing instead of indiscriminate spacing
+    //this->min_spacing=scale_(std::max(nozz_width, nozz_hight));
     // Implementations can change this if they adjust the flow.
     this->_spacing = this->min_spacing;
     
@@ -65,6 +66,7 @@ Fill::fill_surface(const Surface &surface, double nozz_width, double nozz_hight)
     Polylines polylines_out;
     
     Fill::direction_t infill_dir= this->_infill_direction(surface);
+    /*
     if(nozz_width != 1.0){
 	if(nozz_width>nozz_hight){
 		infill_dir.first = 0;
@@ -77,9 +79,10 @@ Fill::fill_surface(const Surface &surface, double nozz_width, double nozz_hight)
     double  root =sqrt(pow(std::get<1>(infill_dir).x,2)+pow(std::get<1>(infill_dir).y,2));
     double  nozz_root =sqrt(pow(nozz_width,2)+pow(nozz_hight,2));
     double blend_fac = (infill_dir.second.y/root *nozz_width/nozz_root)+(infill_dir.second.x/root*nozz_hight/nozz_root);
-    this->density = this->density/blend_fac;
+    //this->density = this->density/blend_fac;
 
     }
+    //*/
     for (size_t i = 0; i < expp.size(); ++i)
         this->_fill_surface_single(
             surface.thickness_layers,
